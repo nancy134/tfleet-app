@@ -13,4 +13,7 @@ export const environment = {
  * This import should be commented out in production mode because it will have a negative impact
  * on performance if an error is thrown.
  */
-// import 'zone.js/dist/zone-error';  // Included with Angular CLI.
+ // import 'zone.js/dist/zone-error';  // Included with Angular CLI.
+export const API_KEY_FOR_BROWSER_RELEASE = 'AIzaSyB47KccZa8VRlzFuQJAvZ8UPembfW-3gq4'
+export const API_KEY_FOR_BROWSER_DEBUG = 'AIzaSyB47KccZa8VRlzFuQJAvZ8UPembfW-3gq4'
+

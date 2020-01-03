@@ -1,5 +1,7 @@
 {
   "name": "fleetApp",
-  "integrations": {},
+  "integrations": {
+    "cordova": {}
+  },
   "type": "angular"
 }
