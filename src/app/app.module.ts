@@ -10,15 +10,26 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 
 import { GoogleMaps } from "@ionic-native/google-maps";
+import { HTTP } from '@ionic-native/http/ngx';
+import { LocationProvider } from '../providers/locations';
+
+//import { HttpModule } from '@angular/http';
 
 @NgModule({
   declarations: [AppComponent],
   entryComponents: [],
-  imports: [BrowserModule, IonicModule.forRoot(), AppRoutingModule],
+  imports: [
+    BrowserModule, 
+    IonicModule.forRoot(), 
+    AppRoutingModule
+//    HttpModule
+    ],
   providers: [
+    LocationProvider,
     StatusBar,
     SplashScreen,
     GoogleMaps,
+    HTTP,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
   ],
   bootstrap: [AppComponent]
