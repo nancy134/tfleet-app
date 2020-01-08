@@ -12,6 +12,7 @@ import { AppComponent } from './app.component';
 import { GoogleMaps } from "@ionic-native/google-maps";
 import { HTTP } from '@ionic-native/http/ngx';
 import { LocationProvider } from '../providers/locations';
+import { VehicleProvider } from '../providers/vehicles';
 
 //import { HttpModule } from '@angular/http';
 
@@ -26,6 +27,7 @@ import { LocationProvider } from '../providers/locations';
     ],
   providers: [
     LocationProvider,
+    VehicleProvider,
     StatusBar,
     SplashScreen,
     GoogleMaps,
