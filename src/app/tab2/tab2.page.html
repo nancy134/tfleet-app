@@ -7,7 +7,9 @@
 </ion-header>
 
 <ion-content>
-  <div id="map_canvas">
-    <button ion-button (click)="onButtonClick($event)">Start demo</button>
-  </div>        
+    <div id="map_canvas">
+    </div>        
+    <div class="updateButton">
+        <ion-button id="updateButton" color="primary" [disabled]="disabled" (click)="update()">Update</ion-button>
+    </div>
 </ion-content>
