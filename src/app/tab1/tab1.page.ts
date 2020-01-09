@@ -22,7 +22,7 @@ export class Tab1Page {
     updateVehicles(){
         var that=this;
         this.vehicles = [];
-        let vehiclePromise = this.vehicleProvider.getVehicles("2773d3c9d12404bdd13c19d122982cf805066286b39d4167af525a54a69dc8a3");
+        let vehiclePromise = this.vehicleProvider.getVehicles("replacwithtoken");
         vehiclePromise.then(function(results){
             that.vehicleData = results;
             let jsonData = JSON.parse(that.vehicleData.data);

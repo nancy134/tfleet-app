@@ -56,7 +56,7 @@ export class Tab2Page {
         var that = this;
         this.disabled = true;
         this.map.clear();
-        let locationPromise = this.locationProvider.getLocations("2773d3c9d12404bdd13c19d122982cf805066286b39d4167af525a54a69dc8a3");
+        let locationPromise = this.locationProvider.getLocations("replacewithtoken");
         locationPromise.then(function(results){
             that.locationData = results;
             let jsonData = JSON.parse(that.locationData.data);
@@ -65,7 +65,7 @@ export class Tab2Page {
             // Markers
             for (let i=0; i<jsonData.length; i++){
                 console.log("id[i]: "+jsonData[i].id+" latitude: "+jsonData[i].latitude+" longitude: "+jsonData[i].longitude);
-                if (jsonData[i].latitude !== 0){
+                if (jsonData[i].latitude !== null && jsonData[i].latitude != 0){
                     console.log("adding marker");
                     var speed = "";
                     if (jsonData[i].speed !== null) speed = jsonData[i].speed + " mph";
@@ -86,7 +86,7 @@ export class Tab2Page {
             let locationArray = [];
             for (let i=0; i<jsonData.length; i++){
                 let pos = new LatLng(jsonData[i].latitude, jsonData[i].longitude);
-                if (jsonData[i].latitude !== 0) locationArray.push(pos);
+                if (jsonData[i].latitude !== null && jsonData[i].latitude != 0) locationArray.push(pos);
             }
             let cameraPosition: CameraPosition<LatLng[]> = {
                 target: locationArray
