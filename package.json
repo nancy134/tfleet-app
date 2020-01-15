@@ -73,7 +73,6 @@
   "description": "An Ionic project",
   "cordova": {
     "plugins": {
-      "cordova-plugin-googlemaps": {},
       "cordova-plugin-whitelist": {},
       "cordova-plugin-statusbar": {},
       "cordova-plugin-device": {},
@@ -82,6 +81,10 @@
       "cordova-plugin-ionic-keyboard": {},
       "cordova-plugin-advanced-http": {
         "OKHTTP_VERSION": "3.10.0"
+      },
+      "cordova-plugin-googlemaps": {
+        "PLAY_SERVICES_VERSION": "15.0.1",
+        "ANDROID_SUPPORT_V4_VERSION": "27.+"
       }
     },
     "platforms": [

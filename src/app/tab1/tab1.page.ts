@@ -9,6 +9,7 @@ import { VehicleProvider } from '../../providers/vehicles';
 export class Tab1Page {
     public vehicleData: any = {};
     vehicles: any;
+    public disabled = false;
     constructor(public vehicleProvider: VehicleProvider) {
         this.vehicles = [
             "vehicle 1",
@@ -19,9 +20,13 @@ export class Tab1Page {
     async ngOnInit() {
         this.updateVehicles();
     }
+    update(){
+        this.updateVehicles();
+    }
     updateVehicles(){
         var that=this;
         this.vehicles = [];
+        this.disabled = true;
         let vehiclePromise = this.vehicleProvider.getVehicles("replacwithtoken");
         vehiclePromise.then(function(results){
             that.vehicleData = results;
@@ -31,7 +36,9 @@ export class Tab1Page {
                 var vehicle = jsonData[i].display_name + " (" + jsonData[i].state + ")";
                 that.vehicles.push(vehicle);
             }
+            that.disabled = false;
         }).catch(function(err){
+            that.disabled = false;
             console.log("err: "+JSON.stringify(err));
         });
     }

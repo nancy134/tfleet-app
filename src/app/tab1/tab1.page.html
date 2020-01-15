@@ -10,4 +10,7 @@
     <ion-list>
         <ion-item *ngFor="let vehicle of vehicles">{{vehicle}}</ion-item>
     </ion-list>
+    <div class="updateButton">
+        <ion-button id="updateButton" color="primary" [disabled]="disabled" (click)="update()">Update</ion-button>
+    </div>
 </ion-content>

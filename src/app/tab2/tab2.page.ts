@@ -6,7 +6,9 @@ import {
     GoogleMaps, 
     GoogleMap,
     GoogleMapOptions,
+    GoogleMapsEvent,
     Marker,
+    MarkerCluster,
     LatLng,
     CameraPosition
 } from '@ionic-native/google-maps/ngx';
@@ -29,14 +31,19 @@ export class Tab2Page {
     
     constructor(private platform: Platform, public locationProvider: LocationProvider) {}
     async ngOnInit() {
-        await this.platform.ready();
-        await this.initializeMap();
+        this.platform.ready().then(() => {
+            console.log("Platform ready");
+            this.initializeMap();
+        });
     }
     update(){
+        this.map.clear();
         this.populateMap();
     }
     initializeMap(){
+        console.log("initializeMap()");
         let options: GoogleMapOptions = {
+            
             camera: {
                 target : [
                     {lat: 37.325456, lng: -122.010646},
@@ -44,44 +51,71 @@ export class Tab2Page {
                     {lat: 37.764127, lng: -122.4309}
                 ]
             }
+         
         };            
         Environment.setEnv({
             'API_KEY_FOR_BROWSER_RELEASE': API_KEY_FOR_BROWSER_RELEASE,
             'API_KEY_FOR_BROWSER_DEBUG' : API_KEY_FOR_BROWSER_DEBUG
         });
         this.map = GoogleMaps.create('map_canvas',options);
-        this.populateMap();
+        this.map.one(GoogleMapsEvent.MAP_READY).then(this.populateMap.bind(this));
     }
     populateMap(){
+        console.log("populateMap");
         var that = this;
         this.disabled = true;
-        this.map.clear();
+        
         let locationPromise = this.locationProvider.getLocations("replacewithtoken");
         locationPromise.then(function(results){
             that.locationData = results;
             let jsonData = JSON.parse(that.locationData.data);
-            console.log("jsonData: "+JSON.stringify(jsonData));
             
-            // Markers
+            // Marker Cluster
+            let locationArray2 = [];
             for (let i=0; i<jsonData.length; i++){
-                console.log("id[i]: "+jsonData[i].id+" latitude: "+jsonData[i].latitude+" longitude: "+jsonData[i].longitude);
-                if (jsonData[i].latitude !== null && jsonData[i].latitude != 0){
-                    console.log("adding marker");
+                if (jsonData[i].latitude !== null && jsonData[i].latitude != 0) {
                     var speed = "";
                     if (jsonData[i].speed !== null) speed = jsonData[i].speed + " mph";
-                    let marker: Marker = that.map.addMarkerSync({
-                        title: jsonData[i].name,
-                        snippet: speed,
-                        icon: 'Red',
-                        animation: 'DROP',
-                        position: {
-                            lat: jsonData[i].latitude,
-                            lng: jsonData[i].longitude
-                        }   
-                    });
+                    let pos = {
+                        "position": {
+                            "lat": jsonData[i].latitude,
+                            "lng":jsonData[i].longitude
+                        },
+                        "name": jsonData[i].name,
+                        "icon": "assets/map/red-dot.png",
+                        "snippet" : speed 
+                    };
+                    locationArray2.push(pos);
                 }
             }
-            
+            let markerCluster: MarkerCluster = that.map.addMarkerClusterSync({
+                boundsDraw: false,
+                markers: locationArray2,
+                icons: [
+                {
+                    min: 2,
+                    max: 100,
+                    url: "./assets/map/m1.png",
+                    label: {
+                        color: "white"
+                    }
+                },
+                {
+                    min: 101,
+                    url: "./assets/map/m1.png",
+                    label: {
+                        color: "white"
+                    }
+                }
+                ]
+            });
+            markerCluster.on(GoogleMapsEvent.MARKER_CLICK).subscribe((params) => {
+                let marker: Marker = params[1];
+                marker.setTitle(marker.get("name"));
+                marker.setSnippet(marker.get("snippet"));
+                marker.showInfoWindow();
+            });
+
             // Camera Postion
             let locationArray = [];
             for (let i=0; i<jsonData.length; i++){
@@ -95,12 +129,11 @@ export class Tab2Page {
                 that.disabled = false;
             }).catch(function(err){
                 that.disabled = false;
-                console.log("err: "+JSON.stringify(err));
             });
+            
             
         }).catch(function(err){
             that.disabled = false;
-            console.log("tab error: "+err);
         });
     }
 }
