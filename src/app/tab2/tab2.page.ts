@@ -71,6 +71,7 @@ export class Tab2Page {
             let jsonData = JSON.parse(that.locationData.data);
             
             // Marker Cluster
+            /*
             let locationArray2 = [];
             for (let i=0; i<jsonData.length; i++){
                 if (jsonData[i].latitude !== null && jsonData[i].latitude != 0) {
@@ -115,6 +116,23 @@ export class Tab2Page {
                 marker.setSnippet(marker.get("snippet"));
                 marker.showInfoWindow();
             });
+            */
+            for (let i=0; i<jsonData.length; i++){
+               if (jsonData[i].latitude !== null && jsonData[i].latitude != 0) {
+                    var speed = "";
+                    if (jsonData[i].speed !== null) speed = jsonData[i].speed + " mph";
+                    let marker: Marker = that.map.addMarkerSync({
+                        title: jsonData[i].name,
+                        snippet: speed,
+                        icon: 'Red',
+                        animation: 'DROP',
+                        position: {
+                            lat: jsonData[i].latitude,
+                            lng: jsonData[i].longitude
+                        }
+                    });
+                }
+            }
 
             // Camera Postion
             let locationArray = [];
