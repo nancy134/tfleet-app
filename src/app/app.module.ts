@@ -13,7 +13,7 @@ import { GoogleMaps } from "@ionic-native/google-maps";
 import { HTTP } from '@ionic-native/http/ngx';
 import { LocationProvider } from '../providers/locations';
 import { VehicleProvider } from '../providers/vehicles';
-
+import { AppVersion } from '@ionic-native/app-version/ngx';
 //import { HttpModule } from '@angular/http';
 
 @NgModule({
@@ -32,6 +32,7 @@ import { VehicleProvider } from '../providers/vehicles';
     SplashScreen,
     GoogleMaps,
     HTTP,
+    AppVersion,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
   ],
   bootstrap: [AppComponent]
