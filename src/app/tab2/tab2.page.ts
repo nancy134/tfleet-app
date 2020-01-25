@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Platform } from '@ionic/angular';
 import { LocationProvider } from '../../providers/locations';
+import { AuthenticationService } from '../services/authentication.service';
 
 import { 
     GoogleMaps, 
@@ -29,7 +30,7 @@ export class Tab2Page {
     map: GoogleMap;
     public disabled = false;
     
-    constructor(private platform: Platform, public locationProvider: LocationProvider) {}
+    constructor(private platform: Platform, public locationProvider: LocationProvider, public authenticationService: AuthenticationService) {}
     async ngOnInit() {
         this.platform.ready().then(() => {
             console.log("Platform ready");
@@ -64,94 +65,102 @@ export class Tab2Page {
         console.log("populateMap");
         var that = this;
         this.disabled = true;
-        
-        let locationPromise = this.locationProvider.getLocations("replacewithtoken");
-        locationPromise.then(function(results){
-            that.locationData = results;
-            let jsonData = JSON.parse(that.locationData.data);
-            
-            // Marker Cluster
-            /*
-            let locationArray2 = [];
-            for (let i=0; i<jsonData.length; i++){
-                if (jsonData[i].latitude !== null && jsonData[i].latitude != 0) {
-                    var speed = "";
-                    if (jsonData[i].speed !== null) speed = jsonData[i].speed + " mph";
-                    let pos = {
-                        "position": {
-                            "lat": jsonData[i].latitude,
-                            "lng":jsonData[i].longitude
-                        },
-                        "name": jsonData[i].name,
-                        "icon": "assets/map/red-dot.png",
-                        "snippet" : speed 
-                    };
-                    locationArray2.push(pos);
-                }
-            }
-            let markerCluster: MarkerCluster = that.map.addMarkerClusterSync({
-                boundsDraw: false,
-                markers: locationArray2,
-                icons: [
-                {
-                    min: 2,
-                    max: 100,
-                    url: "./assets/map/m1.png",
-                    label: {
-                        color: "white"
-                    }
-                },
-                {
-                    min: 101,
-                    url: "./assets/map/m1.png",
-                    label: {
-                        color: "white"
-                    }
-                }
-                ]
-            });
-            markerCluster.on(GoogleMapsEvent.MARKER_CLICK).subscribe((params) => {
-                let marker: Marker = params[1];
-                marker.setTitle(marker.get("name"));
-                marker.setSnippet(marker.get("snippet"));
-                marker.showInfoWindow();
-            });
-            */
-            for (let i=0; i<jsonData.length; i++){
-               if (jsonData[i].latitude !== null && jsonData[i].latitude != 0) {
-                    var speed = "";
-                    if (jsonData[i].speed !== null) speed = jsonData[i].speed + " mph";
-                    let marker: Marker = that.map.addMarkerSync({
-                        title: jsonData[i].name,
-                        snippet: speed,
-                        icon: 'Red',
-                        animation: 'DROP',
-                        position: {
-                            lat: jsonData[i].latitude,
-                            lng: jsonData[i].longitude
-                        }
-                    });
-                }
-            }
 
-            // Camera Postion
-            let locationArray = [];
-            for (let i=0; i<jsonData.length; i++){
-                let pos = new LatLng(jsonData[i].latitude, jsonData[i].longitude);
-                if (jsonData[i].latitude !== null && jsonData[i].latitude != 0) locationArray.push(pos);
-            }
-            let cameraPosition: CameraPosition<LatLng[]> = {
-                target: locationArray
-            };
-            that.map.moveCamera(cameraPosition).then(function(){
-                that.disabled = false;
+        let tokenPromise = this.authenticationService.getToken();
+        tokenPromise.then(function(token){
+        
+            let locationPromise = that.locationProvider.getLocations(token);
+            locationPromise.then(function(results){
+                that.locationData = results;
+                let jsonData = JSON.parse(that.locationData.data);
+            
+                // Marker Cluster
+                /*
+                let locationArray2 = [];
+                for (let i=0; i<jsonData.length; i++){
+                    if (jsonData[i].latitude !== null && jsonData[i].latitude != 0) {
+                        var speed = "";
+                        if (jsonData[i].speed !== null) speed = jsonData[i].speed + " mph";
+                        let pos = {
+                            "position": {
+                                "lat": jsonData[i].latitude,
+                                "lng":jsonData[i].longitude
+                            },
+                            "name": jsonData[i].name,
+                            "icon": "assets/map/red-dot.png",
+                            "snippet" : speed 
+                        };
+                        locationArray2.push(pos);
+                    }
+                }
+                let markerCluster: MarkerCluster = that.map.addMarkerClusterSync({
+                    boundsDraw: false,
+                    markers: locationArray2,
+                    icons: [
+                    {
+                        min: 2,
+                        max: 100,
+                        url: "./assets/map/m1.png",
+                        label: {
+                            color: "white"
+                        }
+                    },
+                    {
+                        min: 101,
+                        url: "./assets/map/m1.png",
+                        label: {
+                            color: "white"
+                        }
+                    }
+                    ]
+                });
+                markerCluster.on(GoogleMapsEvent.MARKER_CLICK).subscribe((params) => {
+                    let marker: Marker = params[1];
+                    marker.setTitle(marker.get("name"));
+                    marker.setSnippet(marker.get("snippet"));
+                    marker.showInfoWindow();
+                });
+                */
+            
+                // Markers
+                for (let i=0; i<jsonData.length; i++){
+                    if (jsonData[i].latitude !== null && jsonData[i].latitude != 0) {
+                        var speed = "";
+                        if (jsonData[i].speed !== null) speed = jsonData[i].speed + " mph";
+                        let marker: Marker = that.map.addMarkerSync({
+                            title: jsonData[i].name,
+                            snippet: speed,
+                            icon: 'Red',
+                            animation: 'DROP',
+                            position: {
+                                lat: jsonData[i].latitude,
+                                lng: jsonData[i].longitude
+                            }
+                        });
+                    }
+                }
+
+                // Camera Postion
+                let locationArray = [];
+                for (let i=0; i<jsonData.length; i++){
+                    let pos = new LatLng(jsonData[i].latitude, jsonData[i].longitude);
+                    if (jsonData[i].latitude !== null && jsonData[i].latitude != 0) locationArray.push(pos);
+                }
+                let cameraPosition: CameraPosition<LatLng[]> = {
+                    target: locationArray
+                };
+                that.map.moveCamera(cameraPosition).then(function(){
+                    that.disabled = false;
+                }).catch(function(err){
+                    that.disabled = false;
+                });
+            
+            
             }).catch(function(err){
                 that.disabled = false;
             });
-            
-            
         }).catch(function(err){
-            that.disabled = false;
+            console.log('err:'+err);
         });
     }
 }

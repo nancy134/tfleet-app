@@ -16,6 +16,8 @@ import { VehicleProvider } from '../providers/vehicles';
 import { AppVersion } from '@ionic-native/app-version/ngx';
 import { AuthProvider } from '../providers/auth';
 import { NativeStorage } from '@ionic-native/native-storage/ngx';
+import { IonicStorageModule } from '@ionic/storage';
+
 
 @NgModule({
   declarations: [AppComponent],
@@ -23,8 +25,8 @@ import { NativeStorage } from '@ionic-native/native-storage/ngx';
   imports: [
     BrowserModule, 
     IonicModule.forRoot(), 
-    AppRoutingModule
-//    HttpModule
+    AppRoutingModule,
+    IonicStorageModule.forRoot()
     ],
   providers: [
     LocationProvider,
