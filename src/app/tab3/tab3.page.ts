@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { AppVersion } from '@ionic-native/app-version/ngx';
+import { AuthenticationService } from '../services/authentication.service';
 
 @Component({
   selector: 'app-tab3',
@@ -9,22 +10,33 @@ import { AppVersion } from '@ionic-native/app-version/ngx';
 export class Tab3Page {
     protected versionNumber: string;
     protected appName: string;
-    constructor(private appVersion: AppVersion) {}
+    protected email: any;
+    
+    constructor(private appVersion: AppVersion, private authenticationService: AuthenticationService) {}
     async ngOnInit() {
+        var that = this;
         this.appVersion.getVersionNumber().then((versionNumber) => {
-            console.log("versionNumber: "+versionNumber);
             this.versionNumber = versionNumber;
         },
         (error) => {
             console.log(error);
         });
         this.appVersion.getAppName().then((appName) => {
-            console.log("appName: "+appName);
             this.appName = appName;
         },
         (error) => {
             console.log(error);
         });
+        let emailPromise = this.authenticationService.getEmail();
+        emailPromise.then(function(email){
+            that.email = email;
+        }).catch(function(err){
+            console.log(err);
+        });
+
+    }
+    logout(){
+        this.authenticationService.logout();
     }
 
 }
