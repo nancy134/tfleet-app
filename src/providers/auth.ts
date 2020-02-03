@@ -20,7 +20,7 @@ export class AuthProvider {
             "Content-type": "application/json"
         };
         return new Promise(function(resolve, reject) {
-            
+            that.http.setDataSerializer('json');
             that.http.sendRequest('https://owner-api.teslamotors.com/oauth/token',
             {
                 method: 'post',
